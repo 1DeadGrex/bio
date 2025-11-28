@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yash - Portfolio</title>
+    <title>MyBio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
         :root {
+            /* Default Theme Variables - These get updated by JS */
             --card-color: rgba(255, 255, 255, 0.08);
             --border-color: rgba(255, 255, 255, 0.15);
             --text-color: #e0e7ff;
             --primary-glow: rgba(173, 216, 230, 0.6);
             --secondary-glow: rgba(200, 200, 200, 0.3);
             --muted-grey: #8899aa;
+            --theme-accent-color: #8899aa; /* Default accent */
         }
 
         body {
@@ -26,6 +28,7 @@
             background-color: #1a1a2e;
             user-select: none; 
             cursor: default; 
+            transition: background-color 1s ease;
         }
 
         /* Custom Scrollbar for card-content */
@@ -57,7 +60,7 @@
             opacity: 0; transition: opacity 1s ease-in-out;
             min-height: 100vh; 
             overflow-y: auto; 
-            display: flex; justify-content: center; align-items: center; padding: 1rem; /* Reduced padding for mobile */
+            display: flex; justify-content: center; align-items: center; padding: 1rem; 
         }
         
         #main-card {
@@ -71,6 +74,7 @@
             min-width: 100%; min-height: 100%; width: auto; height: auto;
             z-index: -1; filter: brightness(0.5);
             object-fit: cover; 
+            transition: opacity 1s ease; /* Smooth transition for video changes */
         }
         
         /* Glass Card Styles */
@@ -80,40 +84,42 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             color: var(--text-color);
+            transition: border-color 1s ease, color 1s ease;
         }
 
-        /* Animated Banner Styles - REDUCED HEIGHT */
+        /* Animated Banner Styles */
         #animated-banner {
-            position: relative; height: 130px; /* Reduced from 160px */
+            position: relative; height: 130px; 
             overflow: hidden;
             border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;
             background-size: cover; 
             background-position: center;
             background-repeat: no-repeat;
+            transition: background-image 1s ease-in-out;
         }
         
-        /* Profile Icon positioning - MOVED UP */
+        /* Profile Icon positioning */
         #profile-icon-container {
-            position: absolute; top: 80px; /* Adjusted from 120px */
+            position: absolute; top: 80px; 
             left: 50%;
             transform: translate(-50%, 0); z-index: 10;
         }
 
         #profile-icon {
-            width: 100px; height: 100px; /* Reduced from 120px */
+            width: 100px; height: 100px; 
             border-radius: 50%;
             border: 4px solid var(--text-color);
             box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow);
             object-fit: cover; background-color: rgba(0, 0, 0, 0.2); 
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, border-color 1s ease, box-shadow 1s ease;
         }
 
         #profile-icon:hover { transform: scale(1.05); }
 
-        /* Scrollable content inside the card - SIGNIFICANTLY REDUCED HEIGHT */
+        /* Scrollable content inside the card */
         .card-content {
-            padding: 3rem 1.5rem 1rem 1.5rem; /* Adjusted padding */
-            max-height: 50vh; /* Reduced from 70vh to ensure player fits on screen */
+            padding: 3rem 1.5rem 1rem 1.5rem; 
+            max-height: 50vh; 
             overflow-y: auto;
         }
         
@@ -129,7 +135,7 @@
             text-shadow: 
                 0 0 10px rgba(255, 255, 255, 0.9), 
                 0 0 20px rgba(255, 255, 255, 0.7), 
-                0 0 40px rgba(173, 216, 230, 0.5);
+                0 0 40px var(--primary-glow);
             transform: scale(1.05) rotateX(5deg) rotateY(3deg);
             cursor: pointer;
         }
@@ -137,14 +143,16 @@
         /* New Icon style for name (Yash) */
         .name-icon {
             font-size: 1.5rem;
-            color: var(--muted-grey);
+            color: var(--theme-accent-color); /* Updated to use theme accent */
             transition: all 0.3s ease;
             cursor: pointer;
+            opacity: 0.8;
         }
         .name-icon:hover {
             color: #ffffff;
             text-shadow: 0 0 8px rgba(200, 200, 200, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
             transform: scale(1.1);
+            opacity: 1;
         }
 
         /* Location/Handle Text */
@@ -157,16 +165,19 @@
         }
         .muted-info {
             font-size: 0.875rem; 
-            color: var(--muted-grey);
+            color: var(--theme-accent-color); /* Updated to use theme accent */
             transition: color 0.5s;
+            opacity: 0.9;
         }
         .muted-info-container:hover .muted-info {
             color: #ffffff;
             text-shadow: 0 0 10px var(--primary-glow), 0 0 20px rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
+            opacity: 1;
         }
         .muted-info i {
             font-size: 0.8rem;
+            /* Icons now inherit color from parent */
         }
 
         /* Technical Skills Icons */
@@ -208,10 +219,9 @@
             box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow), 0 10px 20px rgba(0, 0, 0, 0.4);
         }
 
-        /* Song Name - DARK GREY AND WHITE GRADIENT */
+        /* Song Name - Dynamic Gradient */
         #song-name {
-            /* White -> Dark Grey (#4b5563) -> White */
-            background: linear-gradient(90deg, #ffffff 0%, #4b5563 50%, #ffffff 100%);
+            /* Background is now set via JS */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -228,12 +238,40 @@
             100% { background-position: 0% center; } 
         }
         
+        /* Themed Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--theme-accent-color); /* Updated to use theme accent */
+            cursor: pointer;
+            margin-top: -4px;
+            box-shadow: 0 0 10px var(--primary-glow);
+            transition: box-shadow 0.3s ease, background-color 0.5s ease;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+        input[type="range"]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 15px var(--primary-glow), 0 0 5px #fff;
+        }
+
         /* Highlighted Video Button Style */
         #video-toggle-btn {
             background-color: rgba(173, 216, 230, 0.2);
             border: 1px solid rgba(173, 216, 230, 0.4);
             backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
             box-shadow: 0 0 15px var(--primary-glow);
+            transition: box-shadow 1s ease, border-color 1s ease;
         }
 
         /* --- Modal Snow Effect Styles --- */
@@ -265,12 +303,12 @@
     <div id="main-content" class="w-full min-h-screen">
         
         <video id="bg-video" autoplay loop muted playsinline poster="https://placehold.co/1920x1080/000000/ffffff?text=Video+Loading+Fallback">
-            </video>
+        </video>
 
         <div id="main-card" class="glass-card max-w-3xl w-full mx-auto rounded-3xl relative my-4 lg:my-0 flex flex-col">
             
             <div id="animated-banner">
-                </div>
+            </div>
 
             <div id="profile-icon-container">
                 <img id="profile-icon" src="" alt="Profile Icon" class="z-20">
@@ -278,17 +316,17 @@
 
             <div class="card-content">
                 
-                <h1 id="main-name" class="text-3xl sm:text-4xl font-extrabold text-center pt-8 mb-2 tracking-tight cursor-pointer">Yash</h1>
+                <h1 id="main-name" class="text-3xl sm:text-4xl font-extrabold text-center pt-8 mb-4 tracking-tight cursor-pointer">Yash</h1>
                 
-                <div class="flex justify-center items-center space-x-4 mb-2">
+                <!-- Social Icons immediately below Name -->
+                <div class="flex justify-center items-center space-x-6 mb-4">
                     <a id="github-icon" href="#" target="_blank" title="GitHub" class="name-icon"><i class="fa-brands fa-github"></i></a>
                     <a id="youtube-icon" href="#" target="_blank" title="YouTube Channel" class="name-icon"><i class="fa-brands fa-youtube"></i></a>
                     <a id="instagram-icon" href="#" target="_blank" title="Instagram" class="name-icon"><i class="fa-brands fa-instagram"></i></a>
                 </div>
 
-                <p class="text-lg text-center font-light mb-4 opacity-80">F*CK OFF</p>
-
-                <div class="flex justify-center items-center gap-4 mb-8">
+                <!-- Location and Handle immediately below Socials -->
+                <div class="flex justify-center items-center gap-6 mb-8">
                     <span class="muted-info-container">
                         <span class="muted-info">
                             <i class="fa-solid fa-location-dot"></i> INDIA
@@ -300,6 +338,8 @@
                         </span>
                     </span>
                 </div>
+
+                <p class="text-lg text-center font-light mb-8 opacity-80 italic">"F*CK OFF"</p>
 
                 <div class="flex flex-wrap justify-center items-center gap-6 text-2xl mb-8 border-b border-white/10 pb-6">
                     <div title="HTML5" class="achievement-icon">
@@ -355,14 +395,14 @@
 
                     <span id="current-time" class="text-sm opacity-70 w-10 text-center">0:00</span>
                     
-                    <input type="range" id="playback-slider" value="0" min="0" max="100" class="flex-grow h-1 appearance-none cursor-pointer">
+                    <input type="range" id="playback-slider" value="0" min="0" max="100" class="flex-grow h-1">
                     
                     <span id="duration" class="text-sm opacity-70 w-10 text-center">0:00</span>
                 </div>
                 
                 <div class="flex items-center space-x-3 mt-4">
                     <i class="fa-solid fa-volume-low text-lg opacity-70"></i>
-                    <input type="range" id="volume-slider" value="20" min="0" max="100" class="w-20 h-1 appearance-none cursor-pointer">
+                    <input type="range" id="volume-slider" value="20" min="0" max="100" class="w-20 h-1">
                     <i class="fa-solid fa-volume-high text-lg opacity-70"></i>
                     
                     <span id="song-counter" class="text-sm font-medium opacity-80 ml-4">1/5</span>
@@ -378,7 +418,7 @@
                     </div>
                 </div>
                 
-                <audio id="audio-player" src="" loop></audio>
+                <audio id="audio-player" src=""></audio>
             </div>
 
         </div>
@@ -408,25 +448,107 @@
 
     <script>
         // --- CONFIGURATION: EDIT THESE VALUES EASILY ---
-        const VIDEO_URL = '720p.mp4';
-        const BANNER_URL = 'banner.gif'; 
+        
+        // General Assets
         const PROFILE_LOGO_URL = 'logo.png'; 
         
         // Social Media & Handle Configuration
-        const GITHUB_URL = 'https://github.com/1DeadGrex/';
+        const GITHUB_URL = '';
         const INSTAGRAM_URL = 'https://www.instagram.com/grex.yash';
         const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@DeadGrex';
-        const USER_URL = 'https://www.instagram.com/'; 
-        const USER_HANDLE = 'Larry The Cat'; 
+        const USER_URL = 'https://www.youtube.com/@DeadGrex'; 
+        const USER_HANDLE = 'Bedwars'; 
 
-        // Playlist of 5 songs
+        // --- ENHANCED SONG LIST WITH THEMES AND VIDEOS ---
+        
         const SONGS = [
-            { name: "Silhouette", url: 'Silhouette.mp3', youtubeUrl: 'https://youtu.be/dwn7xRsyb4Y', spotifyUrl: 'https://open.spotify.com/track/3HoGF4zDfQOkNQnUY6W2nH?si=1d489229f9314062' },
-            { name: "SkyFall", url: 'skyfall.mp3', youtubeUrl: 'https://youtu.be/DeumyOzKqgI', spotifyUrl: 'https://open.spotify.com/track/6VObnIkLVruX4UVyxWhlqm?si=990243dd868b47f0' },
-            { name: "Washing Machine Heart", url: 'WashingMachineHeart.mp3', youtubeUrl: 'https://youtu.be/3vjkh-acmTE', spotifyUrl: 'https://open.spotify.com/track/3jjsRKEsF42ccXf8kWR3nu?si=0a2c73ae997d4dc8' },
-            { name: "Not Allowed", url: 'NotAllowed.mp3', youtubeUrl: 'https://youtu.be/r0xTqwKMOyk', spotifyUrl: 'https://open.spotify.com/track/3IznIgmXtrUaoPWpQTy5jB?si=77689acf583840a8' },
-            { name: "Pain", url: 'Pain.mp3', youtubeUrl: 'https://youtu.be/REzdbqfiN9o', spotifyUrl: 'https://open.spotify.com/track/4S4QJfBGGrC8jRIjJHf1Ka?si=58bd0eab20c14d50' }
+            { 
+                name: "Silhouette", 
+                url: 'Silhouette.mp3', 
+                youtubeUrl: 'https://youtu.be/dwn7xRsyb4Y', 
+                spotifyUrl: 'https://open.spotify.com/track/3HoGF4zDfQOkNQnUY6W2nH?si=1d489229f9314062',
+                video: 'silhouette_bg.mp4',       
+                banner: 'banner_silhouette.gif',
+                // White to Silver Gradient
+                textGradient: 'linear-gradient(90deg, #ffffff 0%, #C0C0C0 50%, #ffffff 100%)',
+                theme: {                          
+                    primaryGlow: 'rgba(192, 192, 192, 0.8)', // Silver
+                    secondaryGlow: 'rgba(100, 100, 100, 0.3)',
+                    textColor: '#e0e7ff',                     
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    accentColor: '#A0A0A0' // Solid Silver
+                }
+            },
+            { 
+                name: "SkyFall", 
+                url: 'skyfall.mp3', 
+                youtubeUrl: 'https://youtu.be/DeumyOzKqgI', 
+                spotifyUrl: 'https://open.spotify.com/track/6VObnIkLVruX4UVyxWhlqm?si=990243dd868b47f0',
+                video: 'skyfall_bg.mp4',          
+                banner: 'banner_skyfall.gif',
+                // White -> Light Yellow -> Gold
+                textGradient: 'linear-gradient(90deg, #ffffff 0%, #FFFFE0 25%, #FFD700 50%, #FFFFE0 75%, #ffffff 100%)',     
+                theme: {                          
+                    primaryGlow: 'rgba(255, 215, 0, 0.8)',    // Gold Glow
+                    secondaryGlow: 'rgba(218, 165, 32, 0.4)', // Darker Gold
+                    textColor: '#fffacd',                     
+                    borderColor: 'rgba(255, 215, 0, 0.3)',
+                    accentColor: '#FFD700' // Solid Gold
+                }
+            },
+            { 
+                name: "Washing Machine Heart", 
+                url: 'WashingMachineHeart.mp3', 
+                youtubeUrl: 'https://youtu.be/3vjkh-acmTE', 
+                spotifyUrl: 'https://open.spotify.com/track/3jjsRKEsF42ccXf8kWR3nu?si=0a2c73ae997d4dc8',
+                video: 'wmh_bg.mp4',
+                banner: 'banner_wmh.gif',
+                // White -> Red -> Blood Red
+                textGradient: 'linear-gradient(90deg, #ffffff 0%, #ff0000 40%, #8a0303 60%, #ffffff 100%)',
+                theme: {
+                    primaryGlow: 'rgba(255, 0, 0, 0.8)',  // Red
+                    secondaryGlow: 'rgba(138, 3, 3, 0.5)', // Blood Red
+                    textColor: '#ffe4e1',
+                    borderColor: 'rgba(255, 0, 0, 0.3)',
+                    accentColor: '#FF0000' // Solid Red
+                }
+            },
+            { 
+                name: "Not Allowed", 
+                url: 'NotAllowed.mp3', 
+                youtubeUrl: 'https://youtu.be/r0xTqwKMOyk', 
+                spotifyUrl: 'https://open.spotify.com/track/3IznIgmXtrUaoPWpQTy5jB?si=77689acf583840a8',
+                video: 'notallowed_bg.mp4',
+                banner: 'banner_na.gif',
+                // Carnation (FFA6C9) to Punch Pink (F23A79)
+                textGradient: 'linear-gradient(90deg, #FFA6C9 0%, #F23A79 50%, #FFA6C9 100%)',
+                theme: {
+                    primaryGlow: 'rgba(242, 58, 121, 0.8)',     // Punch Pink
+                    secondaryGlow: 'rgba(255, 166, 201, 0.5)',   // Carnation
+                    textColor: '#ffcccb',
+                    borderColor: 'rgba(242, 58, 121, 0.3)',
+                    accentColor: '#F23A79' // Solid Pink
+                }
+            },
+            { 
+                name: "Little Dark Age", 
+                url: 'LittleDarkAge.mp3', 
+                youtubeUrl: 'https://youtu.be/rtL5oMyBHPs', 
+                spotifyUrl: 'https://open.spotify.com/track/2Y0iGXY6m6immVb2ktbseM?si=74f9e3039424406b',
+                video: 'lda_bg.mp4',
+                banner: 'banner_lda.gif',
+                // #9A6FD6 to #6A3EA3
+                textGradient: 'linear-gradient(90deg, #9A6FD6 0%, #6A3EA3 50%, #9A6FD6 100%)',
+                theme: {
+                    primaryGlow: 'rgba(154, 111, 214, 0.9)',   // #9A6FD6 (Higher Opacity)
+                    secondaryGlow: 'rgba(106, 62, 163, 0.6)',  // #6A3EA3
+                    textColor: '#9A6FD6',                      // Main Text color set to the purple requested
+                    borderColor: 'rgba(154, 111, 214, 0.5)',
+                    accentColor: '#9A6FD6'                     // Solid #9A6FD6 Accent
+                }
+            }
         ];
+        
         let currentSongIndex = 0;
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -443,6 +565,7 @@
             const durationDisplay = document.getElementById('duration');
             const songNameDisplay = document.getElementById('song-name');
             const songCounter = document.getElementById('song-counter');
+            const animatedBanner = document.getElementById('animated-banner');
             
             const mainName = document.getElementById('main-name');
             const videoToggleBtn = document.getElementById('video-toggle-btn');
@@ -462,7 +585,6 @@
             let isBgVideoPlaying = true;
             
             // Apply configured URLs and values
-            document.getElementById('animated-banner').style.backgroundImage = `url('${BANNER_URL}')`;
             document.getElementById('profile-icon').src = PROFILE_LOGO_URL;
             
             githubIcon.href = GITHUB_URL;
@@ -473,7 +595,6 @@
             userLinkContainer.addEventListener('click', () => {
                 window.open(USER_URL, '_blank');
             });
-
 
             // Helper function to format time
             const formatTime = (seconds) => {
@@ -487,21 +608,57 @@
                 songCounter.textContent = `${index + 1}/${SONGS.length}`;
             };
 
-            // Function to load and update song info
+            // --- FUNCTION TO APPLY THEME ---
+            const applyTheme = (theme) => {
+                const root = document.documentElement;
+                root.style.setProperty('--primary-glow', theme.primaryGlow);
+                root.style.setProperty('--secondary-glow', theme.secondaryGlow);
+                root.style.setProperty('--text-color', theme.textColor);
+                root.style.setProperty('--border-color', theme.borderColor);
+                // Set the accent color for icons
+                if(theme.accentColor) {
+                    root.style.setProperty('--theme-accent-color', theme.accentColor);
+                }
+            };
+
+            // --- FUNCTION TO LOAD SONG, VIDEO, BANNER AND THEME ---
             const loadSong = (index, shouldPlay = false) => {
                 currentSongIndex = (index + SONGS.length) % SONGS.length;
                 const song = SONGS[currentSongIndex];
                 
+                // 1. Update Song Info & Links & Text Gradient
                 songNameDisplay.textContent = song.name;
+                if(song.textGradient) {
+                    songNameDisplay.style.background = song.textGradient;
+                    songNameDisplay.style.webkitBackgroundClip = "text";
+                    songNameDisplay.style.webkitTextFillColor = "transparent";
+                    songNameDisplay.style.backgroundClip = "text";
+                    songNameDisplay.style.backgroundSize = "300% auto";
+                }
+
                 audioPlayer.src = song.url;
                 ytLink.href = song.youtubeUrl;
                 spotifyLink.href = song.spotifyUrl;
                 
+                // 2. Update Video Background
+                bgVideo.src = song.video;
+                if (isBgVideoPlaying && !document.hidden) {
+                    bgVideo.play().catch(e => console.error("Video play error:", e));
+                }
+                
+                // 3. Update Banner
+                animatedBanner.style.backgroundImage = `url('${song.banner}')`;
+                
+                // 4. Update Theme Colors
+                if (song.theme) {
+                    applyTheme(song.theme);
+                }
+
                 updateSongCounter(currentSongIndex); 
                 
-                audioPlayer.load();
-                
+                // 5. Handle Audio Playback
                 if (shouldPlay) {
+                    audioPlayer.load();
                     audioPlayer.play().then(() => {
                         playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
                     }).catch(e => {
@@ -520,10 +677,7 @@
                     loadingScreen.style.display = 'none';
                     mainContent.style.opacity = '1';
                     
-                    bgVideo.innerHTML = `<source src="${VIDEO_URL}" type="video/mp4">`;
-                    bgVideo.load();
-                    bgVideo.play().catch(e => console.error("Video playback prevented (non-fatal):", e));
-
+                    // Initial Load
                     loadSong(currentSongIndex, true);
                     audioPlayer.volume = 0.2; 
                     volumeSlider.value = 20; 
@@ -571,6 +725,7 @@
                 audioPlayer.currentTime = playbackSlider.value;
             });
 
+            // AUTO CHANGE SONG ON END
             audioPlayer.addEventListener('ended', () => {
                  loadSong(currentSongIndex + 1, true);
             });
@@ -587,8 +742,21 @@
                     isBgVideoPlaying = true;
                 }
             });
+
+            // --- 4. Page Visibility Logic (Pause Video when tab hidden) ---
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    // Tab is hidden: Pause video to save resources, but Music keeps playing
+                    bgVideo.pause();
+                } else {
+                    // Tab is back: Resume video ONLY if the user hasn't manually paused it
+                    if (isBgVideoPlaying) {
+                        bgVideo.play().catch(e => console.log("Auto-resume video failed", e));
+                    }
+                }
+            });
             
-            // --- 4. Modal and Snow Logic ---
+            // --- 5. Modal and Snow Logic ---
             const generateSnow = () => {
                 snowContainer.innerHTML = ''; 
                 const numberOfFlakes = 50;
@@ -627,10 +795,12 @@
                 }
             });
             
-            loadSong(0); 
+            // Initial setup
+            const initialSong = SONGS[0];
+            animatedBanner.style.backgroundImage = `url('${initialSong.banner}')`;
+            if(initialSong.theme) applyTheme(initialSong.theme);
         });
     </script>
 
 </body>
-
 </html>
