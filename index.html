@@ -10,34 +10,36 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
         :root {
-            /* Default Theme Variables - These get updated by JS */
+            /* Default Theme Variables */
             --card-color: rgba(255, 255, 255, 0.08);
             --border-color: rgba(255, 255, 255, 0.15);
             --text-color: #e0e7ff;
             --primary-glow: rgba(173, 216, 230, 0.6);
             --secondary-glow: rgba(200, 200, 200, 0.3);
             --muted-grey: #8899aa;
-            --theme-accent-color: #8899aa; /* Default accent */
+            --theme-accent-color: #8899aa; 
         }
 
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Hide main body scrollbar */
             background-color: #1a1a2e;
+            color: var(--text-color);
             user-select: none; 
             cursor: default; 
             transition: background-color 1s ease;
+            overflow-x: hidden;
+            overflow-y: auto; 
         }
 
-        /* Custom Scrollbar for card-content */
-        .card-content::-webkit-scrollbar { width: 6px; }
-        .card-content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
-        .card-content::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.1); }
-        .card-content::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.3); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-        /* Loading Screen Styles */
+        /* Loading Screen */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #000;
@@ -45,9 +47,7 @@
             cursor: pointer; transition: opacity 1s ease-in-out; z-index: 1000;
         }
         #loading-screen-text {
-            color: white; 
-            font-size: 1.5rem; 
-            font-weight: 700;
+            color: white; font-size: 1.5rem; font-weight: 700;
             animation: pulse-glow 2s infinite;
         }
         @keyframes pulse-glow {
@@ -55,756 +55,811 @@
             50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px var(--primary-glow), 0 0 30px rgba(255, 255, 255, 0.2); }
         }
 
-        /* Main Content Styles */
-        #main-content {
-            opacity: 0; transition: opacity 1s ease-in-out;
-            min-height: 100vh; 
-            overflow-y: auto; 
-            display: flex; justify-content: center; align-items: center; padding: 1rem; 
-        }
-        
-        #main-card {
-            margin-top: auto; 
-            margin-bottom: auto;
+        /* --- LAYOUT CONTAINER --- */
+        #main-container {
+            display: flex;
+            flex-direction: column; /* Mobile: Stack Vertically */
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            position: relative;
+            z-index: 10;
         }
 
+        @media (min-width: 1024px) {
+            #main-container {
+                flex-direction: row; /* Desktop: Side by Side */
+                align-items: flex-start; /* Align top */
+                justify-content: center;
+                padding-top: 5vh; 
+            }
+            
+            /* Order manipulation for Desktop: Updates go left (-1), Main goes right */
+            #updates-card-wrapper {
+                order: -1; 
+                width: 320px; /* Fixed width sidebar */
+                flex-shrink: 0;
+                position: sticky;
+                top: 2rem;
+            }
+            
+            #main-card-wrapper {
+                flex-grow: 1;
+                max-width: 800px; /* Prevent main card from getting too wide */
+            }
+        }
 
         #bg-video {
             position: fixed; right: 0; bottom: 0;
             min-width: 100%; min-height: 100%; width: auto; height: auto;
             z-index: -1; filter: brightness(0.5);
             object-fit: cover; 
-            transition: opacity 1s ease; /* Smooth transition for video changes */
+            transition: opacity 1s ease; 
         }
-        
-        /* Glass Card Styles */
+
+        /* Common Glass Card Style */
         .glass-card {
             background-color: var(--card-color);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             color: var(--text-color);
-            transition: border-color 1s ease, color 1s ease;
+            border-radius: 1.5rem;
+            transition: border-color 1s ease, color 1s ease, box-shadow 1s ease;
         }
 
-        /* Animated Banner Styles */
+        /* --- UPDATES CARD STYLES --- */
+        #updates-card {
+            padding: 1.5rem;
+            display: flex; flex-direction: column; gap: 1.5rem;
+        }
+
+        .update-section-title {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--theme-accent-color); font-weight: 700; opacity: 0.8;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Discord */
+        .discord-box {
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(0, 0, 0, 0.2); border-radius: 1rem; padding: 1rem;
+            border: 1px solid transparent; transition: all 0.3s ease;
+        }
+        .discord-box:hover { border-color: var(--border-color); background: rgba(0, 0, 0, 0.3); }
+        .discord-avatar-wrapper { position: relative; }
+        
+        /* Updated: Ensure circular avatar on all devices */
+        .discord-avatar { 
+            width: 48px; height: 48px; 
+            border-radius: 50% !important; /* Force circle */
+            object-fit: cover; 
+            background-color: #000;
+        }
+        .discord-status-dot {
+            position: absolute; bottom: 0; right: 0; width: 14px; height: 14px;
+            border-radius: 50%; background-color: #747f8d; /* Default Offline */
+            border: 2px solid #1a1a2e;
+        }
+        .status-online { background-color: #3ba55c; }
+        .status-idle { background-color: #faa61a; }
+        .status-dnd { background-color: #ed4245; }
+        .status-offline { background-color: #747f8d; }
+
+        /* YouTube */
+        .youtube-box { cursor: pointer; transition: transform 0.2s; }
+        .youtube-box:hover { transform: translateY(-2px); }
+        .yt-thumb-container {
+            position: relative; border-radius: 0.75rem; overflow: hidden;
+            aspect-ratio: 16/9; margin-bottom: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .yt-thumb { width: 100%; height: 100%; object-fit: cover; }
+        .yt-play-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.4);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .youtube-box:hover .yt-play-overlay { opacity: 1; }
+
+        /* GitHub */
+        .github-repo-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color);
+            border-radius: 1rem; padding: 1rem; transition: all 0.3s ease; display: block;
+        }
+        .github-repo-card:hover {
+            background: rgba(255, 255, 255, 0.07); transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- MAIN CARD STYLES --- */
+        #main-card {
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+        }
+
         #animated-banner {
-            position: relative; height: 130px; 
-            overflow: hidden;
-            border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;
-            background-size: cover; 
-            background-position: center;
-            background-repeat: no-repeat;
+            height: 140px; width: 100%;
+            background-size: cover; background-position: center;
             transition: background-image 1s ease-in-out;
         }
-        
-        /* Profile Icon positioning */
+
         #profile-icon-container {
-            position: absolute; top: 80px; 
-            left: 50%;
-            transform: translate(-50%, 0); z-index: 10;
+            position: absolute; top: 90px; left: 50%; transform: translateX(-50%); z-index: 20;
         }
-
+        /* Updated: No Outline, just shadow */
         #profile-icon {
-            width: 100px; height: 100px; 
-            border-radius: 50%;
-            border: 4px solid var(--text-color);
-            box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow);
-            object-fit: cover; background-color: rgba(0, 0, 0, 0.2); 
-            transition: transform 0.3s ease, border-color 1s ease, box-shadow 1s ease;
+            width: 100px; height: 100px; border-radius: 50%;
+            border: none; /* Removed Border */
+            box-shadow: 0 4px 30px rgba(0,0,0,0.7); /* Soft shadow */
+            object-fit: cover; background: #000;
         }
 
-        #profile-icon:hover { transform: scale(1.05); }
+        .card-content { padding: 3.5rem 2rem 2rem 2rem; }
 
-        /* Scrollable content inside the card */
-        .card-content {
-            padding: 3rem 1.5rem 1rem 1.5rem; 
-            max-height: 50vh; 
-            overflow-y: auto;
-        }
-        
-        /* Yash Name Clean Particle Glow */
         #main-name {
-            display: inline-block; 
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
-            letter-spacing: 0.05em; 
-            transform-style: preserve-3d;
+            font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5); cursor: pointer;
+            transition: transform 0.3s; display: block;
+            min-height: 3.5rem; /* Reserve height for typing */
         }
-        #main-name:hover {
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.9), 
-                0 0 20px rgba(255, 255, 255, 0.7), 
-                0 0 40px var(--primary-glow);
-            transform: scale(1.05) rotateX(5deg) rotateY(3deg);
-            cursor: pointer;
+        #main-name:hover { transform: scale(1.05); }
+        
+        /* Typewriter Cursor */
+        .cursor-blink {
+            display: inline-block; width: 3px; height: 1em; background-color: var(--text-color);
+            margin-left: 5px; animation: blink 1s step-end infinite; vertical-align: middle;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Icons & Text */
+        .icon-row { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+        .name-icon { font-size: 1.5rem; color: var(--theme-accent-color); transition: 0.3s; opacity: 0.8; }
+        .name-icon:hover { color: #fff; transform: scale(1.1); opacity: 1; }
+
+        .info-row { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem; font-size: 0.9rem; }
+        .muted-info { color: var(--theme-accent-color); opacity: 0.9; display: flex; align-items: center; gap: 0.4rem; }
+        
+        .skills-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;
+            font-size: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 2rem;
         }
         
-        /* New Icon style for name (Yash) */
-        .name-icon {
-            font-size: 1.5rem;
-            color: var(--theme-accent-color); /* Updated to use theme accent */
-            transition: all 0.3s ease;
-            cursor: pointer;
-            opacity: 0.8;
-        }
-        .name-icon:hover {
-            color: #ffffff;
-            text-shadow: 0 0 8px rgba(200, 200, 200, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
-            transform: scale(1.1);
-            opacity: 1;
-        }
-
-        /* Location/Handle Text */
-        .muted-info-container {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
-            cursor: pointer;
-        }
-        .muted-info {
-            font-size: 0.875rem; 
-            color: var(--theme-accent-color); /* Updated to use theme accent */
-            transition: color 0.5s;
-            opacity: 0.9;
-        }
-        .muted-info-container:hover .muted-info {
-            color: #ffffff;
-            text-shadow: 0 0 10px var(--primary-glow), 0 0 20px rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
-            opacity: 1;
-        }
-        .muted-info i {
-            font-size: 0.8rem;
-            /* Icons now inherit color from parent */
-        }
-
-        /* Technical Skills Icons */
+        /* Updated: Slow Hover Animation */
         .achievement-icon {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.6s ease;
+            cursor: default;
         }
-        .achievement-icon i {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .achievement-icon:hover {
-            transform: translateY(-5px) scale(1.2);
-        }
-        .achievement-icon:hover i {
-            filter: drop-shadow(0 0 8px currentColor);
+        .achievement-icon:hover { transform: translateY(-8px) scale(1.1); color: #fff; text-shadow: 0 0 10px var(--primary-glow); }
+
+        /* Music Player */
+        #music-player-card {
+            background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1rem; margin: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column;
         }
 
-        /* Specific colors for each tech icon */
-        .achievement-icon:nth-child(1):hover i { color: #e34f26; } /* HTML */
-        .achievement-icon:nth-child(2):hover i { color: #1572b6; } /* CSS */
-        .achievement-icon:nth-child(3):hover i { color: #f7df1e; } /* JS */
-        .achievement-icon:nth-child(4):hover i { color: #3776ab; } /* Python */
-        .achievement-icon:nth-child(5):hover i { color: #007396; } /* Java */
-        .achievement-icon:nth-child(6):hover i { color: #00599c; } /* C */
-        .achievement-icon:nth-child(7):hover i { color: #7f52ff; } /* Kotlin */
-
-        /* Social Button Glow */
-        .social-button {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background-color: rgba(60, 60, 60, 0.6);
-            color: var(--text-color);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .social-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            background-color: rgba(80, 80, 80, 0.8);
-            box-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow), 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Song Name - Dynamic Gradient */
+        /* Updated: Song Name Gradient Animation */
         #song-name {
-            /* Background is now set via JS */
-            -webkit-background-clip: text;
+            background-image: linear-gradient(90deg, #fff 0%, #aaa 20%, #fff 40%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent; 
-            font-weight: 900;
-            background-size: 300% auto; 
-            animation: gradient-flow 3s linear infinite; 
-            transition: all 0.3s;
-            text-align: right; 
+            color: transparent;
+            animation: shine 4s linear infinite; /* Smooth continuous flow */
+            width: fit-content;
+            max-width: 100%;
+        }
+        @keyframes shine { 
+            0% { background-position: 200% center; } 
+            100% { background-position: -200% center; } 
         }
 
-        @keyframes gradient-flow {
-            0% { background-position: 200% center; } 
-            100% { background-position: 0% center; } 
-        }
+        /* Buttons & Sliders */
+        .control-btn { font-size: 1.2rem; opacity: 0.8; transition: 0.2s; white-space: nowrap; }
+        .control-btn:hover { opacity: 1; transform: scale(1.1); }
         
-        /* Themed Range Sliders */
         input[type="range"] {
-            -webkit-appearance: none;
-            background: transparent;
+            -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px;
+            min-width: 0; flex-shrink: 1;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            background: var(--theme-accent-color); /* Updated to use theme accent */
-            cursor: pointer;
-            margin-top: -4px;
-            box-shadow: 0 0 10px var(--primary-glow);
-            transition: box-shadow 0.3s ease, background-color 0.5s ease;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-        }
-        input[type="range"]:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 15px var(--primary-glow), 0 0 5px #fff;
+            -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+            background: var(--theme-accent-color); cursor: pointer; box-shadow: 0 0 10px var(--primary-glow);
         }
 
-        /* Highlighted Video Button Style */
         #video-toggle-btn {
-            background-color: rgba(173, 216, 230, 0.2);
-            border: 1px solid rgba(173, 216, 230, 0.4);
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px var(--primary-glow);
-            transition: box-shadow 1s ease, border-color 1s ease;
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 50;
+            padding: 0.75rem 1.5rem; border-radius: 2rem; font-weight: bold;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            border: 1px solid var(--theme-accent-color); color: #fff;
+            cursor: pointer; transition: 0.3s;
+        }
+        #video-toggle-btn:hover { background: var(--theme-accent-color); }
+
+        /* View Counter */
+        #view-counter {
+            position: absolute; top: 1.5rem; right: 2rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.8rem; font-family: 'Courier New', monospace;
+            opacity: 0.7; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* --- Modal Snow Effect Styles --- */
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+        }
+        .modal-overlay.flex { display: flex; }
+
+        /* Snow */
         .snow {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; overflow: hidden; z-index: 1; 
         }
         .flake {
-            position: absolute; top: -10px; color: #fff; opacity: 0.8;
+            position: absolute; top: -20px; color: #fff;
             animation: fall linear infinite;
         }
-        .flake:nth-child(4n) { font-size: 1em; animation-duration: 10s; }
-        .flake:nth-child(4n + 1) { font-size: 1.5em; animation-duration: 8s; }
-        .flake:nth-child(4n + 2) { font-size: 0.8em; animation-duration: 12s; }
-        .flake:nth-child(4n + 3) { font-size: 2em; animation-duration: 6s; }
-
         @keyframes fall {
-            to { transform: translateY(100vh); opacity: 0.2; }
+            to { transform: translateY(105vh); opacity: 0; }
         }
-
+        
     </style>
 </head>
 <body>
 
     <div id="loading-screen">
-        <div id="loading-screen-text">click me <3</div>
+        <div id="loading-screen-text">click to enter</div>
     </div>
 
-    <div id="main-content" class="w-full min-h-screen">
-        
-        <video id="bg-video" autoplay loop muted playsinline poster="https://placehold.co/1920x1080/000000/ffffff?text=Video+Loading+Fallback">
-        </video>
+    <video id="bg-video" autoplay loop muted playsinline poster="https://placehold.co/1920x1080/000000/ffffff?text=Loading..."></video>
 
-        <div id="main-card" class="glass-card max-w-3xl w-full mx-auto rounded-3xl relative my-4 lg:my-0 flex flex-col">
-            
-            <div id="animated-banner">
-            </div>
+    <div id="main-container">
 
-            <div id="profile-icon-container">
-                <img id="profile-icon" src="" alt="Profile Icon" class="z-20">
-            </div>
-
-            <div class="card-content">
+        <div id="main-card-wrapper" class="w-full">
+            <div id="main-card" class="glass-card">
                 
-                <h1 id="main-name" class="text-3xl sm:text-4xl font-extrabold text-center pt-8 mb-4 tracking-tight cursor-pointer">Yash</h1>
+                <div id="view-counter" title="Total Page Views">
+                    <i class="fa-solid fa-eye"></i> <span id="view-count-text">...</span>
+                </div>
+
+                <div id="animated-banner"></div>
                 
-                <!-- Social Icons immediately below Name -->
-                <div class="flex justify-center items-center space-x-6 mb-4">
-                    <a id="github-icon" href="#" target="_blank" title="GitHub" class="name-icon"><i class="fa-brands fa-github"></i></a>
-                    <a id="youtube-icon" href="#" target="_blank" title="YouTube Channel" class="name-icon"><i class="fa-brands fa-youtube"></i></a>
-                    <a id="instagram-icon" href="#" target="_blank" title="Instagram" class="name-icon"><i class="fa-brands fa-instagram"></i></a>
+                <div id="profile-icon-container">
+                    <img id="profile-icon" src="" alt="Avatar">
                 </div>
 
-                <!-- Location and Handle immediately below Socials -->
-                <div class="flex justify-center items-center gap-6 mb-8">
-                    <span class="muted-info-container">
-                        <span class="muted-info">
-                            <i class="fa-solid fa-location-dot"></i> INDIA
-                        </span>
-                    </span>
-                    <span id="user-link-container" class="muted-info-container">
-                        <span class="muted-info">
-                            <i class="fa-solid fa-heart"></i> <span id="user-handle">Userz</span>
-                        </span>
-                    </span>
-                </div>
-
-                <p class="text-lg text-center font-light mb-8 opacity-80 italic">"F*CK OFF"</p>
-
-                <div class="flex flex-wrap justify-center items-center gap-6 text-2xl mb-8 border-b border-white/10 pb-6">
-                    <div title="HTML5" class="achievement-icon">
-                        <i class="fa-brands fa-html5"></i>
-                    </div>
-                    <div title="CSS3 / Tailwind" class="achievement-icon">
-                        <i class="fa-brands fa-css3-alt"></i>
-                    </div>
-                    <div title="JavaScript (ES6+)" class="achievement-icon">
-                        <i class="fa-brands fa-js"></i>
-                    </div>
-                    <div title="Python" class="achievement-icon">
-                        <i class="fa-brands fa-python"></i>
-                    </div>
-                    <div title="Java" class="achievement-icon">
-                        <i class="fa-brands fa-java"></i>
-                    </div>
-                    <div title="C / C++" class="achievement-icon">
-                        <i class="fa-solid fa-c"></i>
-                    </div>
-                    <div title="Kotlin" class="achievement-icon">
-                        <i class="fa-solid fa-code"></i>
-                    </div>
-                </div>
-                
-                <div class="text-center text-4xl mb-4 text-white/90">
-                    <i class="fa-solid fa-gem"></i>
-                </div>
-
-                <div class="mb-4 p-4">
-                    <h2 class="text-center text-xl font-semibold mb-6 uppercase tracking-wider opacity-90">ABOUT ME</h2>
-                    <p class="text-center text-md font-light opacity-90 max-w-lg mx-auto leading-relaxed">
-                       Ladle, Kaide mei rahiyo chotte nhi toh gaand pr lagenge sotte 💪                    </p>
-                </div>
-            </div>
-
-            <div id="music-player-card" class="glass-card p-4 mx-2 mb-2 rounded-2xl mt-auto">
-                <div class="flex justify-between items-center mb-2">
-                    <p class="text-sm font-medium tracking-wider uppercase opacity-80">Now Playing:</p>
-                    <p id="song-name" class="text-lg font-bold text-right w-1/2">...</p>
-                </div>
-                
-                <div class="flex items-center space-x-3 mb-2">
-                    <button id="prev-btn" class="text-xl hover:text-white transition-colors">
-                        <i class="fa-solid fa-backward"></i>
-                    </button>
-                    <button id="play-pause-btn" class="text-2xl hover:text-white transition-colors">
-                        <i class="fa-solid fa-play"></i>
-                    </button>
-                    <button id="next-btn" class="text-xl hover:text-white transition-colors">
-                        <i class="fa-solid fa-forward"></i>
-                    </button>
-
-                    <span id="current-time" class="text-sm opacity-70 w-10 text-center">0:00</span>
+                <div class="card-content">
+                    <h1 id="main-name">
+                        <span id="typewriter-text"></span><span class="cursor-blink"></span>
+                    </h1>
                     
-                    <input type="range" id="playback-slider" value="0" min="0" max="100" class="flex-grow h-1">
-                    
-                    <span id="duration" class="text-sm opacity-70 w-10 text-center">0:00</span>
-                </div>
-                
-                <div class="flex items-center space-x-3 mt-4">
-                    <i class="fa-solid fa-volume-low text-lg opacity-70"></i>
-                    <input type="range" id="volume-slider" value="20" min="0" max="100" class="w-20 h-1">
-                    <i class="fa-solid fa-volume-high text-lg opacity-70"></i>
-                    
-                    <span id="song-counter" class="text-sm font-medium opacity-80 ml-4">1/5</span>
-                    
-                    <div class="flex-grow text-right pr-2">
-                        <span class="text-sm font-medium opacity-80 mr-2 hidden sm:inline">Original Links:</span>
-                        <a id="yt-link" href="#" target="blank" class="text-white hover:text-red-500 transition-colors underline mx-1 text-base sm:text-lg" title="Watch on YouTube">
-                            <i class="fa-brands fa-youtube"></i>
-                        </a>
-                        <a id="spotify-link" href="#" target="_blank" class="text-white hover:text-green-500 transition-colors underline mx-1 text-base sm:text-lg" title="Listen on Spotify">
-                            <i class="fa-brands fa-spotify"></i>
-                        </a>
+                    <div class="icon-row">
+                        <a id="github-icon" target="_blank" class="name-icon"><i class="fa-brands fa-github"></i></a>
+                        <a id="youtube-icon" target="_blank" class="name-icon"><i class="fa-brands fa-youtube"></i></a>
+                        <a id="instagram-icon" target="_blank" class="name-icon"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="muted-info"><i class="fa-solid fa-location-dot"></i> INDIA</span>
+                        <span id="user-link-container" class="muted-info cursor-pointer"><i class="fa-solid fa-heart"></i> <span id="user-handle">Userz</span></span>
+                    </div>
+
+                    <p class="text-center italic opacity-70 mb-8">"F*CK OFF"</p>
+
+                    <div class="skills-grid">
+                        <div class="achievement-icon" title="HTML5"><i class="fa-brands fa-html5"></i></div>
+                        <div class="achievement-icon" title="CSS3"><i class="fa-brands fa-css3-alt"></i></div>
+                        <div class="achievement-icon" title="JS"><i class="fa-brands fa-js"></i></div>
+                        <div class="achievement-icon" title="Python"><i class="fa-brands fa-python"></i></div>
+                        <div class="achievement-icon" title="Java"><i class="fa-brands fa-java"></i></div>
+                        <div class="achievement-icon" title="C++"><i class="fa-solid fa-c"></i></div>
+                        <div class="achievement-icon" title="Kotlin"><i class="fa-solid fa-code"></i></div>
+                    </div>
+
+                    <div class="text-center opacity-90">
+                        <h2 class="text-xl font-bold uppercase mb-4 tracking-widest">About Me</h2>
+                        <p class="leading-relaxed font-light opacity-80 max-w-lg mx-auto">
+                           Ladle, Kaide mei rahiyo chotte nhi toh gaand pr lagenge sotte 💪
+                        </p>
                     </div>
                 </div>
-                
-                <audio id="audio-player" src=""></audio>
-            </div>
 
+                <div id="music-player-card">
+                    <div class="flex justify-between items-center mb-2 text-sm opacity-80">
+                        <span>NOW PLAYING</span>
+                        <span id="song-name" class="font-bold truncate ml-2">...</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 sm:gap-4 mb-2">
+                        <div class="flex items-center gap-2">
+                            <button id="prev-btn" class="control-btn"><i class="fa-solid fa-backward"></i></button>
+                            <button id="play-pause-btn" class="control-btn text-xl w-8 text-center"><i class="fa-solid fa-play"></i></button>
+                            <button id="next-btn" class="control-btn"><i class="fa-solid fa-forward"></i></button>
+                        </div>
+                        
+                        <span id="current-time" class="text-[10px] sm:text-xs w-8 text-center tabular-nums">0:00</span>
+                        <input type="range" id="playback-slider" value="0" min="0" max="100" class="flex-grow">
+                        <span id="duration" class="text-[10px] sm:text-xs w-8 text-center tabular-nums">0:00</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-volume-low text-xs opacity-70"></i>
+                        <input type="range" id="volume-slider" value="20" min="0" max="100" class="w-16 sm:w-24">
+                        <div class="flex-grow text-right">
+                            <a id="yt-link" target="_blank" class="mx-1 hover:text-red-500 transition"><i class="fa-brands fa-youtube"></i></a>
+                            <a id="spotify-link" target="_blank" class="mx-1 hover:text-green-500 transition"><i class="fa-brands fa-spotify"></i></a>
+                        </div>
+                    </div>
+                    <audio id="audio-player"></audio>
+                </div>
+            </div>
         </div>
-        
-        <button id="video-toggle-btn" class="fixed bottom-10 right-10 z-40 p-4 rounded-full text-white font-bold transition-all social-button">
-            <i class="fa-solid fa-pause"></i> Video
-        </button>
-        
-        <div id="about-me-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
-            
-            <div id="snow-container" class="snow"></div>
 
-            <div class="glass-card p-8 rounded-xl max-w-3xl w-full relative z-10">
-                <button id="close-modal-btn" class="absolute top-4 right-4 text-2xl text-white/70 hover:text-white transition-colors">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <h2 class="text-3xl font-extrabold mb-4 border-b border-white/20 pb-2">About Yash</h2>
-                <div class="space-y-4 text-white/80 card-content max-h-[70vh]">
-                    <p>Welcome! I'm Yash, a passionate Full Stack Developer with a knack for creating clean, functional, and visually appealing web applications. My journey spans various technologies, from Python backends to modern JavaScript frameworks like React and Angular. I thrive on solving complex problems and turning ideas into digital reality.</p>
-                    <p>Outside of coding, I'm an avid enthusiast of game design and development. I love exploring the blend of logic, storytelling, and visual art that goes into building immersive experiences. This passion fuels my drive to build intuitive and engaging user interfaces.</p>
-                    <h3 class="text-xl font-semibold mt-6 mb-2">My Philosophy</h3>
-                    <p>I believe in continuous learning and maintaining a strong focus on code quality and performance. Whether it's optimizing a database query or crafting pixel-perfect CSS, the goal is always to deliver an excellent user experience. Let's build something amazing together!</p>
+        <div id="updates-card-wrapper">
+            <div id="updates-card" class="glass-card">
+                <h2 class="text-xl font-bold mb-2">Updates</h2>
+
+                <div>
+                    <div class="update-section-title">Discord Activity</div>
+                    <div class="discord-box">
+                        <div class="discord-avatar-wrapper">
+                            <img id="discord-pfp" src="https://cdn.discordapp.com/embed/avatars/0.png" class="discord-avatar">
+                            <div id="discord-status-dot" class="discord-status-dot"></div>
+                        </div>
+                        <div class="flex flex-col overflow-hidden w-full">
+                            <span id="discord-username" class="font-bold text-sm truncate">deadgrex</span>
+                            <span id="discord-activity" class="text-xs opacity-70 truncate">Checking status...</span>
+                        </div>
+                    </div>
                 </div>
+
+                <div>
+                    <div class="update-section-title">Latest Video</div>
+                    <div class="youtube-box" id="youtube-widget">
+                        <div class="yt-thumb-container">
+                            <img id="yt-thumbnail" src="" class="yt-thumb">
+                            <div class="yt-play-overlay"><i class="fa-brands fa-youtube text-3xl text-red-500"></i></div>
+                        </div>
+                        <div>
+                            <div id="yt-video-title" class="font-medium text-sm leading-tight line-clamp-2 mb-1">Loading...</div>
+                            <div id="yt-video-date" class="text-xs opacity-60"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="update-section-title">Featured Project</div>
+                    <a id="github-repo-link" target="_blank" class="github-repo-card">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fa-brands fa-github"></i>
+                            <span id="repo-name" class="font-bold text-sm">Loading...</span>
+                        </div>
+                        <p id="repo-desc" class="text-xs opacity-70 mb-3 line-clamp-2">Fetching...</p>
+                        <div class="flex justify-between text-[10px] opacity-60 font-mono">
+                            <span id="repo-created"></span>
+                            <span id="repo-updated"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="video-toggle-btn"><i class="fa-solid fa-pause"></i> Video</button>
+
+    <div id="about-me-modal" class="modal-overlay">
+        <div id="snow-container" class="snow"></div>
+        
+        <div class="glass-card p-8 max-w-2xl w-full mx-4 relative z-10">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-xl hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="text-2xl font-bold mb-4">More About Me</h2>
+            <div class="space-y-4 opacity-90 text-sm leading-relaxed max-h-[60vh] overflow-y-auto">
+                <p>Welcome! I'm Yash, a passionate Full Stack Developer with a knack for creating clean, functional, and visually appealing web applications. My journey spans various technologies, from Python backends to modern JavaScript frameworks like React and Angular.</p>
+                <p>Outside of coding, I'm an avid enthusiast of game design and development. I love exploring the blend of logic, storytelling, and visual art that goes into building immersive experiences.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION: EDIT THESE VALUES EASILY ---
-        
-        // General Assets
+        // --- CONFIGURATION ---
         const PROFILE_LOGO_URL = 'logo.png'; 
-        
-        // Social Media & Handle Configuration
-        const GITHUB_URL = '';
+        const GITHUB_URL = 'https://github.com/1DeadGrex';
         const INSTAGRAM_URL = 'https://www.instagram.com/grex.yash';
         const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@DeadGrex';
-        const USER_URL = 'https://www.youtube.com/@DeadGrex'; 
+        const USER_URL = 'https://www.google.com/search?q=6+7+meme'; 
         const USER_HANDLE = 'Bedwars'; 
 
-        // --- ENHANCED SONG LIST WITH THEMES AND VIDEOS ---
+        // UPDATES CARD CONFIG
+        const YOUTUBE_VIDEO_ID = 'VUUN26R9pqg'; 
+        const YOUTUBE_VIDEO_TITLE = 'Yes, I Cheat';
+        const YOUTUBE_VIDEO_DATE = 'Oct 17, 2025';
         
+        const GITHUB_USERNAME = '1DeadGrex'; 
+        const GITHUB_REPO_NAME = 'bio'; 
+        
+        const DISCORD_USER_ID = '1167147762891100206'; 
+
+        // --- TYPEWRITER CONFIG ---
+        const TYPEWRITER_NAMES = ["Yash", "DeadGrex", "HotSnipe"];
+        const PAUSE_DURATION = 5000; // 5 seconds pause to read name
+        const TYPE_SPEED = 150;
+        const DELETE_SPEED = 100;
+
         const SONGS = [
             { 
                 name: "Silhouette", 
                 url: 'Silhouette.mp3', 
                 youtubeUrl: 'https://youtu.be/dwn7xRsyb4Y', 
-                spotifyUrl: 'https://open.spotify.com/track/3HoGF4zDfQOkNQnUY6W2nH?si=1d489229f9314062',
-                video: 'Silhouette_bg.mp4',       
+                spotifyUrl: 'https://open.spotify.com/track/3HoGF4zDfQOkNQnUY6W2nH',
+                video: 'silhouette_bg.mp4',       
                 banner: 'banner_silhouette.gif',
-                // White to Silver Gradient
-                textGradient: 'linear-gradient(90deg, #ffffff 0%, #C0C0C0 50%, #ffffff 100%)',
-                theme: {                          
-                    primaryGlow: 'rgba(192, 192, 192, 0.8)', // Silver
-                    secondaryGlow: 'rgba(100, 100, 100, 0.3)',
-                    textColor: '#e0e7ff',                     
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    accentColor: '#A0A0A0' // Solid Silver
-                }
+                textGradient: 'linear-gradient(90deg, #fff, #C0C0C0, #fff)',
+                theme: { primaryGlow: 'rgba(192, 192, 192, 0.8)', secondaryGlow: 'rgba(100, 100, 100, 0.3)', textColor: '#e0e7ff', borderColor: 'rgba(255, 255, 255, 0.2)', accentColor: '#A0A0A0' }
             },
             { 
                 name: "SkyFall", 
                 url: 'skyfall.mp3', 
                 youtubeUrl: 'https://youtu.be/DeumyOzKqgI', 
-                spotifyUrl: 'https://open.spotify.com/track/6VObnIkLVruX4UVyxWhlqm?si=990243dd868b47f0',
+                spotifyUrl: 'https://open.spotify.com/track/6VObnIkLVruX4UVyxWhlqm',
                 video: 'skyfall_bg.mp4',          
                 banner: 'banner_skyfall.gif',
-                // White -> Light Yellow -> Gold
-                textGradient: 'linear-gradient(90deg, #ffffff 0%, #FFFFE0 25%, #FFD700 50%, #FFFFE0 75%, #ffffff 100%)',     
-                theme: {                          
-                    primaryGlow: 'rgba(255, 215, 0, 0.8)',    // Gold Glow
-                    secondaryGlow: 'rgba(218, 165, 32, 0.4)', // Darker Gold
-                    textColor: '#fffacd',                     
-                    borderColor: 'rgba(255, 215, 0, 0.3)',
-                    accentColor: '#FFD700' // Solid Gold
-                }
+                textGradient: 'linear-gradient(90deg, #fff, #FFD700, #fff)',     
+                theme: { primaryGlow: 'rgba(255, 215, 0, 0.8)', secondaryGlow: 'rgba(218, 165, 32, 0.4)', textColor: '#fffacd', borderColor: 'rgba(255, 215, 0, 0.3)', accentColor: '#FFD700' }
             },
             { 
                 name: "Washing Machine Heart", 
                 url: 'WashingMachineHeart.mp3', 
                 youtubeUrl: 'https://youtu.be/3vjkh-acmTE', 
-                spotifyUrl: 'https://open.spotify.com/track/3jjsRKEsF42ccXf8kWR3nu?si=0a2c73ae997d4dc8',
+                spotifyUrl: 'https://open.spotify.com/track/3jjsRKEsF42ccXf8kWR3nu',
                 video: 'wmh_bg.mp4',
                 banner: 'banner_wmh.gif',
-                // White -> Red -> Blood Red
-                textGradient: 'linear-gradient(90deg, #ffffff 0%, #ff0000 40%, #8a0303 60%, #ffffff 100%)',
-                theme: {
-                    primaryGlow: 'rgba(255, 0, 0, 0.8)',  // Red
-                    secondaryGlow: 'rgba(138, 3, 3, 0.5)', // Blood Red
-                    textColor: '#ffe4e1',
-                    borderColor: 'rgba(255, 0, 0, 0.3)',
-                    accentColor: '#FF0000' // Solid Red
-                }
+                textGradient: 'linear-gradient(90deg, #fff, #ff0000, #fff)',
+                theme: { primaryGlow: 'rgba(255, 0, 0, 0.8)', secondaryGlow: 'rgba(138, 3, 3, 0.5)', textColor: '#ffe4e1', borderColor: 'rgba(255, 0, 0, 0.3)', accentColor: '#FF0000' }
             },
             { 
                 name: "Not Allowed", 
                 url: 'NotAllowed.mp3', 
                 youtubeUrl: 'https://youtu.be/r0xTqwKMOyk', 
-                spotifyUrl: 'https://open.spotify.com/track/3IznIgmXtrUaoPWpQTy5jB?si=77689acf583840a8',
+                spotifyUrl: 'https://open.spotify.com/track/3IznIgmXtrUaoPWpQTy5jB',
                 video: 'notallowed_bg.mp4',
                 banner: 'banner_na.gif',
-                // Carnation (FFA6C9) to Punch Pink (F23A79)
-                textGradient: 'linear-gradient(90deg, #FFA6C9 0%, #F23A79 50%, #FFA6C9 100%)',
-                theme: {
-                    primaryGlow: 'rgba(242, 58, 121, 0.8)',     // Punch Pink
-                    secondaryGlow: 'rgba(255, 166, 201, 0.5)',   // Carnation
-                    textColor: '#ffcccb',
-                    borderColor: 'rgba(242, 58, 121, 0.3)',
-                    accentColor: '#F23A79' // Solid Pink
-                }
+                textGradient: 'linear-gradient(90deg, #FFA6C9, #F23A79, #FFA6C9)',
+                theme: { primaryGlow: 'rgba(242, 58, 121, 0.8)', secondaryGlow: 'rgba(255, 166, 201, 0.5)', textColor: '#ffcccb', borderColor: 'rgba(242, 58, 121, 0.3)', accentColor: '#F23A79' }
             },
             { 
-                name: "Little Dark Age", 
-                url: 'LittleDarkAge.mp3', 
-                youtubeUrl: 'https://youtu.be/rtL5oMyBHPs', 
-                spotifyUrl: 'https://open.spotify.com/track/2Y0iGXY6m6immVb2ktbseM?si=74f9e3039424406b',
-                video: 'lda_bg.mp4',
-                banner: 'banner_lda.gif',
-                // #9A6FD6 to #6A3EA3
-                textGradient: 'linear-gradient(90deg, #9A6FD6 0%, #6A3EA3 50%, #9A6FD6 100%)',
-                theme: {
-                    primaryGlow: 'rgba(154, 111, 214, 0.9)',   // #9A6FD6 (Higher Opacity)
-                    secondaryGlow: 'rgba(106, 62, 163, 0.6)',  // #6A3EA3
-                    textColor: '#9A6FD6',                      // Main Text color set to the purple requested
-                    borderColor: 'rgba(154, 111, 214, 0.5)',
-                    accentColor: '#9A6FD6'                     // Solid #9A6FD6 Accent
-                }
+                name: "Pain", 
+                url: 'Pain.mp3', 
+                youtubeUrl: 'https://youtu.be/REzdbqfiN9o', 
+                spotifyUrl: 'https://open.spotify.com/track/4S4QJfBGGrC8jRIjJHf1Ka',
+                video: 'pain_bg.mp4',
+                banner: 'banner_pain.gif',
+                textGradient: 'linear-gradient(90deg, #9A6FD6, #6A3EA3, #9A6FD6)',
+                theme: { primaryGlow: 'rgba(154, 111, 214, 0.9)', secondaryGlow: 'rgba(106, 62, 163, 0.6)', textColor: '#9A6FD6', borderColor: 'rgba(154, 111, 214, 0.5)', accentColor: '#9A6FD6' }
             }
         ];
-        
+
         let currentSongIndex = 0;
+        let audioPlayer, bgVideo;
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Elements
             const loadingScreen = document.getElementById('loading-screen');
-            const mainContent = document.getElementById('main-content');
-            const bgVideo = document.getElementById('bg-video');
-            const audioPlayer = document.getElementById('audio-player');
+            bgVideo = document.getElementById('bg-video');
+            audioPlayer = document.getElementById('audio-player');
             const playPauseBtn = document.getElementById('play-pause-btn');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
-            const playbackSlider = document.getElementById('playback-slider');
+            const slider = document.getElementById('playback-slider');
             const volumeSlider = document.getElementById('volume-slider');
-            const currentTimeDisplay = document.getElementById('current-time');
-            const durationDisplay = document.getElementById('duration');
-            const songNameDisplay = document.getElementById('song-name');
-            const songCounter = document.getElementById('song-counter');
-            const animatedBanner = document.getElementById('animated-banner');
-            
-            const mainName = document.getElementById('main-name');
             const videoToggleBtn = document.getElementById('video-toggle-btn');
-            const aboutMeModal = document.getElementById('about-me-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const snowContainer = document.getElementById('snow-container');
             
-            const githubIcon = document.getElementById('github-icon');
-            const youtubeIcon = document.getElementById('youtube-icon');
-            const instagramIcon = document.getElementById('instagram-icon');
-            const userHandleDisplay = document.getElementById('user-handle');
-            const userLinkContainer = document.getElementById('user-link-container');
-            
-            const ytLink = document.getElementById('yt-link');
-            const spotifyLink = document.getElementById('spotify-link');
-            
-            let isBgVideoPlaying = true;
-            
-            // Apply configured URLs and values
+            // Initialization
             document.getElementById('profile-icon').src = PROFILE_LOGO_URL;
+            document.getElementById('github-icon').href = GITHUB_URL;
+            document.getElementById('youtube-icon').href = YOUTUBE_CHANNEL_URL;
+            document.getElementById('instagram-icon').href = INSTAGRAM_URL;
+            document.getElementById('user-handle').textContent = USER_HANDLE;
+            document.getElementById('user-link-container').onclick = () => window.open(USER_URL, '_blank');
+
+            // --- TYPEWRITER START ---
+            startTypewriter();
+
+            // --- VIEW COUNTER START ---
+            initViewCounter();
+
+            // --- UPDATES CARD INIT ---
             
-            githubIcon.href = GITHUB_URL;
-            youtubeIcon.href = YOUTUBE_CHANNEL_URL;
-            instagramIcon.href = INSTAGRAM_URL;
-            userHandleDisplay.textContent = USER_HANDLE;
+            // 1. YouTube
+            document.getElementById('yt-thumbnail').src = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/mqdefault.jpg`;
+            document.getElementById('yt-video-title').textContent = YOUTUBE_VIDEO_TITLE;
+            document.getElementById('yt-video-date').textContent = YOUTUBE_VIDEO_DATE;
+            document.getElementById('youtube-widget').onclick = () => window.open(`https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`, '_blank');
             
-            userLinkContainer.addEventListener('click', () => {
-                window.open(USER_URL, '_blank');
-            });
+            // 2. GitHub
+            document.getElementById('repo-name').textContent = GITHUB_REPO_NAME;
+            document.getElementById('github-repo-link').href = `https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}`;
+            fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}`)
+                .then(r => r.json())
+                .then(d => {
+                    document.getElementById('repo-desc').textContent = d.description || "No description";
+                    document.getElementById('repo-created').textContent = new Date(d.created_at).toLocaleDateString();
+                    document.getElementById('repo-updated').textContent = new Date(d.updated_at).toLocaleDateString();
+                }).catch(() => {
+                    document.getElementById('repo-desc').textContent = "Failed to load repo data.";
+                });
 
-            // Helper function to format time
-            const formatTime = (seconds) => {
-                const min = Math.floor(seconds / 60);
-                const sec = Math.floor(seconds % 60);
-                return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-            };
-            
-            // Function to update the song counter
-            const updateSongCounter = (index) => {
-                songCounter.textContent = `${index + 1}/${SONGS.length}`;
-            };
+            // 3. Discord
+            initDiscord();
 
-            // --- FUNCTION TO APPLY THEME ---
-            const applyTheme = (theme) => {
-                const root = document.documentElement;
-                root.style.setProperty('--primary-glow', theme.primaryGlow);
-                root.style.setProperty('--secondary-glow', theme.secondaryGlow);
-                root.style.setProperty('--text-color', theme.textColor);
-                root.style.setProperty('--border-color', theme.borderColor);
-                // Set the accent color for icons
-                if(theme.accentColor) {
-                    root.style.setProperty('--theme-accent-color', theme.accentColor);
-                }
-            };
+            // Load Initial Song
+            loadSong(0);
 
-            // --- FUNCTION TO LOAD SONG, VIDEO, BANNER AND THEME ---
-            const loadSong = (index, shouldPlay = false) => {
-                currentSongIndex = (index + SONGS.length) % SONGS.length;
-                const song = SONGS[currentSongIndex];
-                
-                // 1. Update Song Info & Links & Text Gradient
-                songNameDisplay.textContent = song.name;
-                if(song.textGradient) {
-                    songNameDisplay.style.background = song.textGradient;
-                    songNameDisplay.style.webkitBackgroundClip = "text";
-                    songNameDisplay.style.webkitTextFillColor = "transparent";
-                    songNameDisplay.style.backgroundClip = "text";
-                    songNameDisplay.style.backgroundSize = "300% auto";
-                }
-
-                audioPlayer.src = song.url;
-                ytLink.href = song.youtubeUrl;
-                spotifyLink.href = song.spotifyUrl;
-                
-                // 2. Update Video Background
-                bgVideo.src = song.video;
-                if (isBgVideoPlaying && !document.hidden) {
-                    bgVideo.play().catch(e => console.error("Video play error:", e));
-                }
-                
-                // 3. Update Banner
-                animatedBanner.style.backgroundImage = `url('${song.banner}')`;
-                
-                // 4. Update Theme Colors
-                if (song.theme) {
-                    applyTheme(song.theme);
-                }
-
-                updateSongCounter(currentSongIndex); 
-                
-                // 5. Handle Audio Playback
-                if (shouldPlay) {
-                    audioPlayer.load();
-                    audioPlayer.play().then(() => {
-                        playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                    }).catch(e => {
-                        console.error("Audio playback blocked:", e);
-                        playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-                    });
-                } else {
-                    playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-                }
-            };
-            
-            // --- 1. Loading Screen Logic ---
+            // Event Listeners
             loadingScreen.addEventListener('click', () => {
                 loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    mainContent.style.opacity = '1';
+                setTimeout(() => { 
+                    loadingScreen.style.display = 'none'; 
+                    loadSong(currentSongIndex, true); 
                     
-                    // Initial Load
-                    loadSong(currentSongIndex, true);
                     audioPlayer.volume = 0.2; 
                     volumeSlider.value = 20; 
+                    
                 }, 1000);
             });
 
-
-            // --- 2. Music Player Logic ---
-            playPauseBtn.addEventListener('click', () => {
-                if (audioPlayer.paused) {
-                    audioPlayer.play().then(() => {
-                        playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-                    });
-                } else {
-                    audioPlayer.pause();
-                    playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                loadSong(currentSongIndex - 1, !audioPlayer.paused);
-            });
-
-            nextBtn.addEventListener('click', () => {
-                loadSong(currentSongIndex + 1, !audioPlayer.paused);
-            });
-
-            volumeSlider.addEventListener('input', (e) => {
-                audioPlayer.volume = e.target.value / 100;
-            });
+            playPauseBtn.onclick = togglePlay;
+            prevBtn.onclick = () => loadSong(currentSongIndex - 1, true);
+            nextBtn.onclick = () => loadSong(currentSongIndex + 1, true);
+            audioPlayer.onended = () => loadSong(currentSongIndex + 1, true);
             
-            audioPlayer.addEventListener('loadedmetadata', () => {
-                const duration = audioPlayer.duration;
-                durationDisplay.textContent = formatTime(duration);
-                playbackSlider.max = duration;
-            });
-
-            audioPlayer.addEventListener('timeupdate', () => {
-                const currentTime = audioPlayer.currentTime;
-                currentTimeDisplay.textContent = formatTime(currentTime);
-                playbackSlider.value = currentTime;
-            });
+            slider.oninput = (e) => audioPlayer.currentTime = e.target.value;
+            audioPlayer.ontimeupdate = () => {
+                slider.value = audioPlayer.currentTime;
+                document.getElementById('current-time').textContent = formatTime(audioPlayer.currentTime);
+            };
+            audioPlayer.onloadedmetadata = () => {
+                slider.max = audioPlayer.duration;
+                document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
+            };
             
-            playbackSlider.addEventListener('input', () => {
-                audioPlayer.currentTime = playbackSlider.value;
-            });
+            volumeSlider.oninput = (e) => audioPlayer.volume = e.target.value / 100;
 
-            // AUTO CHANGE SONG ON END
-            audioPlayer.addEventListener('ended', () => {
-                 loadSong(currentSongIndex + 1, true);
-            });
-            
-            // --- 3. Video Toggle Button Logic ---
-            videoToggleBtn.addEventListener('click', () => {
-                if (isBgVideoPlaying) {
-                    bgVideo.pause();
-                    videoToggleBtn.innerHTML = '<i class="fa-solid fa-play"></i> Video';
-                    isBgVideoPlaying = false;
-                } else {
-                    bgVideo.play().catch(e => console.error("Video playback failed on resume:", e));
-                    videoToggleBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Video';
-                    isBgVideoPlaying = true;
-                }
-            });
-
-            // --- 4. Page Visibility Logic (Pause Video when tab hidden) ---
-            document.addEventListener("visibilitychange", () => {
-                if (document.hidden) {
-                    // Tab is hidden: Pause video to save resources, but Music keeps playing
-                    bgVideo.pause();
-                } else {
-                    // Tab is back: Resume video ONLY if the user hasn't manually paused it
-                    if (isBgVideoPlaying) {
-                        bgVideo.play().catch(e => console.log("Auto-resume video failed", e));
-                    }
-                }
-            });
-            
-            // --- 5. Modal and Snow Logic ---
-            const generateSnow = () => {
-                snowContainer.innerHTML = ''; 
-                const numberOfFlakes = 50;
-                const flakeSymbols = ['*', '✦', '✧', '❄', '❅'];
-                
-                for (let i = 0; i < numberOfFlakes; i++) {
-                    const flake = document.createElement('div');
-                    flake.className = 'flake';
-                    flake.textContent = flakeSymbols[Math.floor(Math.random() * flakeSymbols.length)];
-                    
-                    flake.style.left = `${Math.random() * 100}%`;
-                    flake.style.animationDelay = `${Math.random() * 20}s`; 
-                    flake.style.animationDuration = `${(Math.random() * 10) + 5}s`; 
-                    
-                    snowContainer.appendChild(flake);
-                }
+            let isVideoPlaying = true;
+            videoToggleBtn.onclick = () => {
+                isVideoPlaying = !isVideoPlaying;
+                isVideoPlaying ? bgVideo.play() : bgVideo.pause();
+                videoToggleBtn.innerHTML = isVideoPlaying ? '<i class="fa-solid fa-pause"></i> Video' : '<i class="fa-solid fa-play"></i> Video';
             };
 
-            mainName.addEventListener('click', () => {
-                generateSnow(); 
-                aboutMeModal.classList.remove('hidden');
-                aboutMeModal.classList.add('flex');
-            });
-
-            closeModalBtn.addEventListener('click', () => {
-                aboutMeModal.classList.add('hidden');
-                aboutMeModal.classList.remove('flex');
-                snowContainer.innerHTML = ''; 
-            });
-            
-            aboutMeModal.addEventListener('click', (e) => {
-                if (e.target.id === 'about-me-modal') {
-                    aboutMeModal.classList.add('hidden');
-                    aboutMeModal.classList.remove('flex');
-                    snowContainer.innerHTML = ''; 
+            // Modal
+            const modal = document.getElementById('about-me-modal');
+            document.getElementById('main-name').onclick = () => {
+                modal.classList.add('flex');
+                setTimeout(generateSnow, 100); 
+            };
+            document.getElementById('close-modal-btn').onclick = () => {
+                modal.classList.remove('flex');
+                document.getElementById('snow-container').innerHTML = '';
+            };
+            modal.onclick = (e) => { 
+                if(e.target === modal) {
+                    modal.classList.remove('flex');
+                    document.getElementById('snow-container').innerHTML = '';
                 }
-            });
-            
-            // Initial setup
-            const initialSong = SONGS[0];
-            animatedBanner.style.backgroundImage = `url('${initialSong.banner}')`;
-            if(initialSong.theme) applyTheme(initialSong.theme);
+            };
         });
+
+        // --- FUNCTIONS ---
+
+        // Typewriter Logic
+        function startTypewriter() {
+            const textElement = document.getElementById('typewriter-text');
+            let nameIdx = 0;
+            let charIdx = 0;
+            let isDeleting = false;
+
+            function type() {
+                const currentName = TYPEWRITER_NAMES[nameIdx];
+                
+                if (isDeleting) {
+                    // Deleting
+                    textElement.textContent = currentName.substring(0, charIdx - 1);
+                    charIdx--;
+                } else {
+                    // Typing
+                    textElement.textContent = currentName.substring(0, charIdx + 1);
+                    charIdx++;
+                }
+
+                // Default speed
+                let typeSpeed = TYPE_SPEED;
+
+                if (isDeleting) typeSpeed = DELETE_SPEED;
+
+                // Finished Typing
+                if (!isDeleting && charIdx === currentName.length) {
+                    typeSpeed = PAUSE_DURATION; // Wait 5 seconds
+                    isDeleting = true;
+                } 
+                // Finished Deleting
+                else if (isDeleting && charIdx === 0) {
+                    isDeleting = false;
+                    nameIdx = (nameIdx + 1) % TYPEWRITER_NAMES.length;
+                    typeSpeed = 500; // Small pause before next word
+                }
+
+                setTimeout(type, typeSpeed);
+            }
+
+            type();
+        }
+
+        // View Counter Logic (Simulated with API)
+        function initViewCounter() {
+            const countDisplay = document.getElementById('view-count-text');
+            // Namespace needs to be unique. Using a combination of strings.
+            const namespace = 'yash-deadgrex-portfolio-v1'; 
+            const key = 'visits';
+
+            fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+                .then(res => res.json())
+                .then(data => {
+                    countDisplay.textContent = data.count;
+                })
+                .catch(err => {
+                    console.warn('Counter API failed, using fallback.');
+                    // Fallback to local storage if API fails
+                    let visits = localStorage.getItem('local_visits') || 120;
+                    visits = parseInt(visits) + 1;
+                    localStorage.setItem('local_visits', visits);
+                    countDisplay.textContent = visits;
+                });
+        }
+
+        function loadSong(index, play = false) {
+            currentSongIndex = (index + SONGS.length) % SONGS.length;
+            const song = SONGS[currentSongIndex];
+            
+            const songNameEl = document.getElementById('song-name');
+            songNameEl.textContent = song.name;
+            songNameEl.style.backgroundImage = song.textGradient; // Uses backgroundImage for gradient text
+            
+            audioPlayer.src = song.url;
+            document.getElementById('yt-link').href = song.youtubeUrl;
+            document.getElementById('spotify-link').href = song.spotifyUrl;
+            document.getElementById('animated-banner').style.backgroundImage = `url('${song.banner}')`;
+            
+            bgVideo.src = song.video;
+            bgVideo.play().catch(()=>{});
+
+            const r = document.documentElement;
+            if(song.theme) {
+                r.style.setProperty('--primary-glow', song.theme.primaryGlow);
+                r.style.setProperty('--secondary-glow', song.theme.secondaryGlow);
+                r.style.setProperty('--text-color', song.theme.textColor);
+                r.style.setProperty('--border-color', song.theme.borderColor);
+                r.style.setProperty('--theme-accent-color', song.theme.accentColor);
+            }
+
+            if(play) {
+                audioPlayer.play().catch(()=>{});
+                // Force volume again just in case
+                audioPlayer.volume = document.getElementById('volume-slider').value / 100;
+            }
+            updatePlayBtn();
+        }
+
+        function togglePlay() {
+            audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
+            updatePlayBtn();
+        }
+
+        function updatePlayBtn() {
+            const btn = document.getElementById('play-pause-btn');
+            btn.innerHTML = audioPlayer.paused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>';
+        }
+
+        function formatTime(s) {
+            if(isNaN(s)) return "0:00";
+            return Math.floor(s / 60) + ':' + Math.floor(s % 60).toString().padStart(2, '0');
+        }
+
+        // --- NEW: FETCH API METHOD (No WebSocket) ---
+        function initDiscord() {
+            const statusDot = document.getElementById('discord-status-dot');
+            const activityText = document.getElementById('discord-activity');
+            const avatar = document.getElementById('discord-pfp');
+            const username = document.getElementById('discord-username');
+            
+            if(!DISCORD_USER_ID) return;
+
+            // Define update function
+            const updateStatus = () => {
+                fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success) {
+                            const d = data.data;
+                            
+                            // Username
+                            if(d.discord_user.username) {
+                                username.textContent = d.discord_user.username;
+                            }
+
+                            // Status
+                            statusDot.className = 'discord-status-dot'; 
+                            switch(d.discord_status) {
+                                case 'online': statusDot.classList.add('status-online'); break;
+                                case 'idle': statusDot.classList.add('status-idle'); break;
+                                case 'dnd': statusDot.classList.add('status-dnd'); break;
+                                default: statusDot.classList.add('status-offline'); break;
+                            }
+
+                            // Avatar
+                            if(d.discord_user.avatar) {
+                                avatar.src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.png`;
+                            }
+
+                            // 1. Spotify
+                            if(d.listening_to_spotify && d.spotify) {
+                                activityText.textContent = `Listening to ${d.spotify.song}`;
+                            } 
+                            // 2. Games / Activities (Skip Custom Status type 4)
+                            else if (d.activities && d.activities.length > 0) {
+                                const game = d.activities.find(a => a.type !== 4);
+                                if (game) {
+                                    activityText.textContent = `Playing ${game.name}`;
+                                } else {
+                                    activityText.textContent = d.discord_status.charAt(0).toUpperCase() + d.discord_status.slice(1);
+                                }
+                            } else {
+                                activityText.textContent = d.discord_status.charAt(0).toUpperCase() + d.discord_status.slice(1);
+                            }
+                        } else {
+                            console.warn("Lanyard API Error:", data);
+                            activityText.textContent = "Offline (Not Monitored)";
+                            statusDot.className = 'discord-status-dot status-offline';
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Discord Fetch Error:", err);
+                        activityText.textContent = "Offline";
+                        statusDot.className = 'discord-status-dot status-offline';
+                    });
+            };
+
+            updateStatus();
+            setInterval(updateStatus, 5000);
+        }
+        
+        function generateSnow() {
+            const container = document.getElementById('snow-container');
+            container.innerHTML = '';
+            const flakeSymbols = ['*', '✦', '✧', '❄', '❅'];
+            
+            for(let i=0; i<40; i++) {
+                const f = document.createElement('div');
+                f.className = 'flake'; 
+                f.textContent = flakeSymbols[Math.floor(Math.random() * flakeSymbols.length)];
+                
+                f.style.left = Math.random()*100 + '%';
+                f.style.animationDuration = (Math.random()*4 + 3) + 's'; 
+                f.style.animationDelay = (Math.random()*2) + 's';
+                
+                f.style.opacity = Math.random() * 0.7 + 0.3;
+                f.style.fontSize = (Math.random() * 1.5 + 0.8) + 'em'; 
+                
+                container.appendChild(f);
+            }
+        }
     </script>
-
 </body>
-</html>
-
-
-
-
+</html>z
