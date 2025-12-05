@@ -10,7 +10,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
         :root {
-            /* Default Theme Variables */
             --card-color: rgba(255, 255, 255, 0.08);
             --border-color: rgba(255, 255, 255, 0.15);
             --text-color: #e0e7ff;
@@ -33,7 +32,6 @@
             overflow-y: auto; 
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
         ::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.2); border-radius: 4px; }
@@ -55,10 +53,10 @@
             50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px var(--primary-glow), 0 0 30px rgba(255, 255, 255, 0.2); }
         }
 
-        /* --- LAYOUT CONTAINER --- */
+        
         #main-container {
             display: flex;
-            flex-direction: column; /* Mobile: Stack Vertically */
+            flex-direction: column; 
             min-height: 100vh;
             padding: 2rem 1rem;
             max-width: 1400px;
@@ -70,8 +68,8 @@
 
         @media (min-width: 1024px) {
             #main-container {
-                flex-direction: row; /* Desktop: Side by Side */
-                align-items: flex-start; /* Align top */
+                flex-direction: row; 
+                align-items: flex-start; 
                 justify-content: center;
                 padding-top: 5vh; 
             }
@@ -79,7 +77,7 @@
             /* Order manipulation for Desktop: Updates go left (-1), Main goes right */
             #updates-card-wrapper {
                 order: -1; 
-                width: 320px; /* Fixed width sidebar */
+                width: 320px; 
                 flex-shrink: 0;
                 position: sticky;
                 top: 2rem;
@@ -87,7 +85,7 @@
             
             #main-card-wrapper {
                 flex-grow: 1;
-                max-width: 800px; /* Prevent main card from getting too wide */
+                max-width: 800px;
             }
         }
 
@@ -99,7 +97,6 @@
             transition: opacity 1s ease; 
         }
 
-        /* Common Glass Card Style */
         .glass-card {
             background-color: var(--card-color);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -110,7 +107,7 @@
             transition: border-color 1s ease, color 1s ease, box-shadow 1s ease;
         }
 
-        /* --- UPDATES CARD STYLES --- */
+    
         #updates-card {
             padding: 1.5rem;
             display: flex; flex-direction: column; gap: 1.5rem;
@@ -122,8 +119,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
         }
-
-        /* Discord */
         .discord-box {
             display: flex; align-items: center; gap: 1rem;
             background: rgba(0, 0, 0, 0.2); border-radius: 1rem; padding: 1rem;
@@ -132,10 +127,9 @@
         .discord-box:hover { border-color: var(--border-color); background: rgba(0, 0, 0, 0.3); }
         .discord-avatar-wrapper { position: relative; }
         
-        /* Updated: Ensure circular avatar on all devices */
         .discord-avatar { 
             width: 48px; height: 48px; 
-            border-radius: 50% !important; /* Force circle */
+            border-radius: 50% !important;
             object-fit: cover; 
             background-color: #000;
         }
@@ -175,7 +169,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- MAIN CARD STYLES --- */
+        /* --------------------------------------------------------------------------------------MAIN CARD STYLES----------------------------------------------------------------------------------- */
         #main-card {
             position: relative; overflow: hidden; display: flex; flex-direction: column;
         }
@@ -189,11 +183,10 @@
         #profile-icon-container {
             position: absolute; top: 90px; left: 50%; transform: translateX(-50%); z-index: 20;
         }
-        /* Updated: No Outline, just shadow */
         #profile-icon {
             width: 100px; height: 100px; border-radius: 50%;
-            border: none; /* Removed Border */
-            box-shadow: 0 4px 30px rgba(0,0,0,0.7); /* Soft shadow */
+            border: none; 
+            box-shadow: 0 4px 30px rgba(0,0,0,0.7); 
             object-fit: cover; background: #000;
         }
 
@@ -203,18 +196,18 @@
             font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem;
             text-shadow: 0 0 10px rgba(0,0,0,0.5); cursor: pointer;
             transition: transform 0.3s; display: block;
-            min-height: 3.5rem; /* Reserve height for typing */
+            min-height: 3.5rem; 
         }
         #main-name:hover { transform: scale(1.05); }
         
-        /* Typewriter Cursor */
+        
         .cursor-blink {
             display: inline-block; width: 3px; height: 1em; background-color: var(--text-color);
             margin-left: 5px; animation: blink 1s step-end infinite; vertical-align: middle;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* Icons & Text */
+        
         .icon-row { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
         .name-icon { font-size: 1.5rem; color: var(--theme-accent-color); transition: 0.3s; opacity: 0.8; }
         .name-icon:hover { color: #fff; transform: scale(1.1); opacity: 1; }
@@ -227,22 +220,20 @@
             font-size: 2rem; margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 2rem;
         }
-        
-        /* Updated: Slow Hover Animation */
         .achievement-icon {
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.6s ease;
             cursor: default;
         }
         .achievement-icon:hover { transform: translateY(-8px) scale(1.1); color: #fff; text-shadow: 0 0 10px var(--primary-glow); }
 
-        /* Music Player */
+        
         #music-player-card {
             background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1rem; margin: 1rem;
             border-top: 1px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column;
         }
 
-        /* Updated: Song Name Gradient Animation */
+      
         #song-name {
             background-image: linear-gradient(90deg, #fff 0%, #aaa 20%, #fff 40%, #fff 100%);
             background-size: 200% auto;
@@ -250,7 +241,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             color: transparent;
-            animation: shine 4s linear infinite; /* Smooth continuous flow */
+            animation: shine 4s linear infinite; 
             width: fit-content;
             max-width: 100%;
         }
@@ -259,7 +250,7 @@
             100% { background-position: -200% center; } 
         }
 
-        /* Buttons & Sliders */
+        
         .control-btn { font-size: 1.2rem; opacity: 0.8; transition: 0.2s; white-space: nowrap; }
         .control-btn:hover { opacity: 1; transform: scale(1.1); }
         
@@ -281,7 +272,7 @@
         }
         #video-toggle-btn:hover { background: var(--theme-accent-color); }
 
-        /* View Counter */
+        
         #view-counter {
             position: absolute; top: 1.5rem; right: 2rem;
             display: flex; align-items: center; gap: 0.5rem;
@@ -290,7 +281,7 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Modal */
+      
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100;
             display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
@@ -469,7 +460,6 @@
     </div>
 
     <script>
-        // --- CONFIGURATION ---
         const PROFILE_LOGO_URL = 'logo.png'; 
         const GITHUB_URL = 'https://github.com/1DeadGrex';
         const INSTAGRAM_URL = 'https://www.instagram.com/grex.yash';
@@ -477,7 +467,6 @@
         const USER_URL = 'https://www.google.com/search?q=6+7+meme'; 
         const USER_HANDLE = 'Bedwars'; 
 
-        // UPDATES CARD CONFIG
         const YOUTUBE_VIDEO_ID = 'VUUN26R9pqg'; 
         const YOUTUBE_VIDEO_TITLE = 'Yes, I Cheat';
         const YOUTUBE_VIDEO_DATE = 'Oct 17, 2025';
@@ -487,9 +476,8 @@
         
         const DISCORD_USER_ID = '1167147762891100206'; 
 
-        // --- TYPEWRITER CONFIG ---
         const TYPEWRITER_NAMES = ["Yash", "DeadGrex", "HotSnipe"];
-        const PAUSE_DURATION = 5000; // 5 seconds pause to read name
+        const PAUSE_DURATION = 1000; 
         const TYPE_SPEED = 150;
         const DELETE_SPEED = 100;
 
@@ -550,7 +538,7 @@
         let audioPlayer, bgVideo;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Elements
+
             const loadingScreen = document.getElementById('loading-screen');
             bgVideo = document.getElementById('bg-video');
             audioPlayer = document.getElementById('audio-player');
@@ -561,7 +549,7 @@
             const volumeSlider = document.getElementById('volume-slider');
             const videoToggleBtn = document.getElementById('video-toggle-btn');
             
-            // Initialization
+
             document.getElementById('profile-icon').src = PROFILE_LOGO_URL;
             document.getElementById('github-icon').href = GITHUB_URL;
             document.getElementById('youtube-icon').href = YOUTUBE_CHANNEL_URL;
@@ -569,21 +557,15 @@
             document.getElementById('user-handle').textContent = USER_HANDLE;
             document.getElementById('user-link-container').onclick = () => window.open(USER_URL, '_blank');
 
-            // --- TYPEWRITER START ---
             startTypewriter();
 
-            // --- VIEW COUNTER START ---
             initViewCounter();
 
-            // --- UPDATES CARD INIT ---
-            
-            // 1. YouTube
             document.getElementById('yt-thumbnail').src = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/mqdefault.jpg`;
             document.getElementById('yt-video-title').textContent = YOUTUBE_VIDEO_TITLE;
             document.getElementById('yt-video-date').textContent = YOUTUBE_VIDEO_DATE;
             document.getElementById('youtube-widget').onclick = () => window.open(`https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`, '_blank');
-            
-            // 2. GitHub
+
             document.getElementById('repo-name').textContent = GITHUB_REPO_NAME;
             document.getElementById('github-repo-link').href = `https://github.com/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}`;
             fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO_NAME}`)
@@ -596,13 +578,10 @@
                     document.getElementById('repo-desc').textContent = "Failed to load repo data.";
                 });
 
-            // 3. Discord
             initDiscord();
 
-            // Load Initial Song
             loadSong(0);
 
-            // Event Listeners
             loadingScreen.addEventListener('click', () => {
                 loadingScreen.style.opacity = '0';
                 setTimeout(() => { 
@@ -657,7 +636,6 @@
             };
         });
 
-        // --- FUNCTIONS ---
 
         // Typewriter Logic
         function startTypewriter() {
@@ -670,30 +648,30 @@
                 const currentName = TYPEWRITER_NAMES[nameIdx];
                 
                 if (isDeleting) {
-                    // Deleting
+           
                     textElement.textContent = currentName.substring(0, charIdx - 1);
                     charIdx--;
                 } else {
-                    // Typing
+            
                     textElement.textContent = currentName.substring(0, charIdx + 1);
                     charIdx++;
                 }
 
-                // Default speed
+      
                 let typeSpeed = TYPE_SPEED;
 
                 if (isDeleting) typeSpeed = DELETE_SPEED;
 
-                // Finished Typing
+     
                 if (!isDeleting && charIdx === currentName.length) {
                     typeSpeed = PAUSE_DURATION; // Wait 5 seconds
                     isDeleting = true;
                 } 
-                // Finished Deleting
+         
                 else if (isDeleting && charIdx === 0) {
                     isDeleting = false;
                     nameIdx = (nameIdx + 1) % TYPEWRITER_NAMES.length;
-                    typeSpeed = 500; // Small pause before next word
+                    typeSpeed = 500; 
                 }
 
                 setTimeout(type, typeSpeed);
@@ -702,10 +680,10 @@
             type();
         }
 
-        // View Counter Logic (Simulated with API)
+       
         function initViewCounter() {
             const countDisplay = document.getElementById('view-count-text');
-            // Namespace needs to be unique. Using a combination of strings.
+          
             const namespace = 'yash-deadgrex-portfolio-v1'; 
             const key = 'visits';
 
@@ -863,4 +841,5 @@
     </script>
 </body>
 </html>
+
 
